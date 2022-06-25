@@ -5,6 +5,8 @@ var pageContentE1 = document.querySelector("#page-content");
 var tasksInProgressE1 = document.querySelector("#tasks-in-progress");
 var tasksCompletedE1 = document.querySelector("#tasks-completed");
 
+var tasks = [];
+
 var taskFormHandler = function (event) {
   event.preventDefault();
   var taskNameInput = document.querySelector("input[name='task-name']").value;
@@ -67,6 +69,7 @@ var createTaskE1 = function (taskDataObj) {
   taskDataObj = taskIdCounter;
 
   tasks.push(taskDataObj);
+  saveTasks();
 
   // increase task counter for next unique id
   taskIdCounter++;
@@ -140,6 +143,8 @@ var editTask = function (taskId) {
       }
     }
 
+    saveTasks();
+
     alert("Task Updated!");
 
     formE1.removeAttribute("data-task-id");
@@ -165,9 +170,8 @@ var editTask = function (taskId) {
       // reassign tasks array to be the same as updated TaskArr
       tasks = updatedTaskArr;
     }
+    saveTasks();
   };
-
-  var tasks = [];
 
   // get content from task name and type
   var taskName = taskSelected.querySelector("h3.task-name").textContent;
@@ -208,6 +212,7 @@ var taskStatusChangeHandler = function (event) {
     }
   }
   console.log(tasks);
+  saveTasks();
 };
 formE1.addEventListener("submit", taskFormHandler);
 
@@ -227,5 +232,10 @@ var taskButtonHandler = function (event) {
     deleteTask(taskId);
   }
 };
+
+var saveTasks = function () {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+};
+
 pageContentE1.addEventListener("click", taskButtonHandler);
 pageContentE1.addEventListener("change", taskStatusChangeHandler);
